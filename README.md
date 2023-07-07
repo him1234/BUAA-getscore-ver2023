@@ -1,6 +1,6 @@
 ## 北航成绩查询脚本
 
-标题党了，其实是很早前的一个查分脚本，感谢[@ViYulton](https://github.com/ViYulton)提供的版本（`ScoreGet_ReleasedVersion_v1.1.py`，~~这个版本可能更好因为能记录成绩列表~~），我改的简（ruo）洁（zhi）了一些。
+本项目基于@wzk1015（`ScoreGet_ReleasedVersion_v1.1.py`）修改。
 
 2023-07-06 更新：在原脚本基础上接入了微信的pushplus推送，请在pushplus官网注册账号并填入token即可使用。
 
