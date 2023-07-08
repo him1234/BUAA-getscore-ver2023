@@ -195,7 +195,7 @@ while True:
                 sumlistxuefen.append(0)
                 sumlistgpa.append(0)
             postcontent['content']+='<b>'+str(i+1)+'、'+sumscorelist[i]['kcmc']+'</b>\n<b>分数：</b>'+sumscorelist[i]['kccj']+'\n<b>分数类型：</b>'+sumscorelist[i]['fslx']+'\n<b>学分：</b>'+sumscorelist[i]['xf']+'\n<b>课程类型：</b>'+sumscorelist[i]['kclx']+'\n<b>课程GPA：</b>'+str(round(sumlistgpa[i],2))+'\n'
-        postcontent['content']+='<hr class="my-2"> <b>总加权平均分：</b>'+str(round(get_jiaquan(sumlistcourse,sumlistxuefen),5))+'\n<b>总GPA：</b>'+str(round(get_jiaquan(sumlistgpa,sumlistxuefen),5))+'\nVersion:3.0\nLastUpdate:2023-07-06'
+        postcontent['content']+='<hr class="my-2"> <b>总加权平均分：</b>'+str(round(get_jiaquan(sumlistcourse,sumlistxuefen),5))+'\n<b>总GPA：</b>'+str(round(get_jiaquan(sumlistgpa,sumlistxuefen),5))+'\nVersion:3.0\nLastUpdate:2023-07-08'
         
         print( sumlistxuefen,sumlistgpa,sumlistcourse)
         send_mail()
