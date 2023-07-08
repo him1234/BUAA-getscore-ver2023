@@ -99,7 +99,7 @@ while True:
         # scorelist.append(coursedict)
         sumscorelist.append(eval(coursedict))
     newlist=[]
-    flag=True
+    flag=False
     while True:
         null='暂未出分'
         st=scorestr.find('{',st+1)
