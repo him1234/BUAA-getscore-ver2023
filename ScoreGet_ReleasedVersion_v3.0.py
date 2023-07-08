@@ -1,6 +1,7 @@
 '''
 使用说明：使用前先根据你的情况修改部分代码，修改好后保存然后双击就进入运行状态了。要保持本脚本可以正常运行，需要保持网络正常、脚本窗口不关闭。如果想停止接收邮件，关闭该窗口即可。
-
+首先需要选择用于发送成绩信息的邮箱，需要在邮箱提供商处设置开启SMTP，并将SMTP服务器、发件邮箱用户名、发件邮箱密码依次替换19-21行的对应内容，并用发件邮箱的地址替换22行的对应内容
+然后选择用于收件的邮箱（可与发件邮箱相同），替换23行的对应内容（如果有多个收件人，需要用List保存各个收件人的邮箱地址并用该List替换）
 最后需要获取Cookie。Chrome的获取方法：在浏览器中打开https://app.buaa.edu.cn/buaascore/wap/default/index，并用自己的统一认证账号登录，然后按下F12，在最上面一栏中点"Application"，在左边栏点"Cookies"左边的小三角，选中"Cookies"下第一个项，将每个元素的名称和值按'Name':'Value'的格式填入代码中的cookies，也就是把cookies建立成由【名称到值的映射】构成的字典
 
 '''
@@ -17,11 +18,13 @@ listcourse=[]
 listxuefen=[]
 listgpa=list()
 postcontent={
-    'token':'', #pushplustoken
+    'token':'',
     'title':'',
     'content':''}
 def get_gpa(course,xuefen):
     gpa=4-((3*((100-course)**2))/1600)
+    if gpa<=1:
+        gpa=0
     return gpa
 
 def get_jiaquan(course,xuefen):
@@ -35,12 +38,14 @@ def get_jiaquan(course,xuefen):
 
     
 def send_mail():
-
+ 
     sendurl='http://www.pushplus.plus/send'
     
     r=requests.post(sendurl,json=postcontent)
     print(r.text)
+   
 
+    
 
 url=r"https://app.buaa.edu.cn/buaascore/wap/default/index"
 data={
@@ -48,7 +53,6 @@ data={
     'year':'2022-2023'
 }
 cookies={  # 用你的cookie替换
-
 
 }
 while True:
@@ -119,7 +123,7 @@ while True:
         except:#send notification
             try:
                 newlist.append((subdict['kcmc'],subdict['kccj']))
-                flag=False
+                flag=True
             except:
                 pass
    
@@ -132,7 +136,9 @@ while True:
             postcontent['content']+='<b>'+name+'</b>\n <b>分数：</b>'+score+'\n'
         postcontent['content']+='<hr class="my-2"> <center><h4><b>本学期所有已出成绩课程信息</b></h4></center><hr class="my-2">'
         for i in range(len(scorelist)):
-            if scorelist[i]['fslx']!='两级制':
+          
+            
+            if scorelist[i]['fslx']!='两级制' and scorelist[i]['kccj']!="缺考":
                 try:
                    listxuefen.append(float(scorelist[i]['xf']))
                    listcourse.append(int(scorelist[i]['kccj']))
@@ -147,6 +153,8 @@ while True:
                             listcourse.append(74.70177871);
                         if scorelist[i]['kccj']=='及格':
                             listcourse.append(64.976198569163);
+                        if scorelist[i]['kccj']=='不及格':
+                            listcourse.append(0);
                         print(scorelist[i]['fslx'],listxuefen,listgpa,listcourse)
                 
                         listgpa.append(get_gpa(listcourse[i],listxuefen[i]))
@@ -156,11 +164,13 @@ while True:
                 listgpa.append(0)
             postcontent['content']+='<b>'+str(i+1)+'、'+scorelist[i]['kcmc']+'</b>\n<b>分数：</b>'+scorelist[i]['kccj']+'\n<b>分数类型：</b>'+scorelist[i]['fslx']+'\n<b>学分：</b>'+scorelist[i]['xf']+'\n<b>课程类型：</b>'+scorelist[i]['kclx']+'\n<b>课程GPA：</b>'+str(round(listgpa[i],2))+'\n'
         postcontent['content']+='<b>本学期加权平均分：</b>'+str(round(get_jiaquan(listcourse,listxuefen),5))+'\n<b>本学期GPA：</b>'+str(round(get_jiaquan(listgpa,listxuefen),5))
-        
+        print(postcontent['content'])
         postcontent['content']+='<hr class="my-2"> <center><h4><b>所有已出成绩课程信息</b></h4></center><hr class="my-2">'
         print(sumscorelist)
         for i in range(len(sumscorelist)):
-            if sumscorelist[i]['fslx']!='两级制':
+          
+                
+            if sumscorelist[i]['fslx']!='两级制' and sumscorelist[i]['kccj']!="缺考":
                 try:
                    sumlistxuefen.append(float(sumscorelist[i]['xf']))
                    sumlistcourse.append(int(sumscorelist[i]['kccj']))
@@ -175,6 +185,8 @@ while True:
                             sumlistcourse.append(74.70177871);
                         if sumscorelist[i]['kccj']=='及格':
                             sumlistcourse.append(64.976198569163);
+                        if sumscorelist[i]['kccj']=='不及格':
+                            sumlistcourse.append(0);
                         print(sumscorelist[i]['fslx'],sumlistxuefen,sumlistgpa,sumlistcourse)
                 
                         sumlistgpa.append(get_gpa(sumlistcourse[i],sumlistxuefen[i]))
